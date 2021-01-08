@@ -26,8 +26,7 @@ def veff_to_aeff(energies, effective_volume):
     return effective_volume * ice_density / int_len
 
 
-def flux_sensitivity(energies, effective_area, stations=1, livetime=1,
-                     limit_factor=2.44):
+def flux_sensitivity(energies, effective_area, limit_factor=2.44):
     # Get number of energy bins per decade
     log_energy = np.log10(energies)
     d_log_energy = np.diff(log_energy)
@@ -36,8 +35,7 @@ def flux_sensitivity(energies, effective_area, stations=1, livetime=1,
             raise ValueError("Energies should be evenly spaced in log-10-space")
     bins_per_decade = 1/d_log_energy[0]
 
-    factors = (limit_factor / livetime / stations *
-               bins_per_decade / np.log(10) / energies)
+    factors = limit_factor * bins_per_decade / np.log(10) / energies
 
     return factors / effective_area
 
