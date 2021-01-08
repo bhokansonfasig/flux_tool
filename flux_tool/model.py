@@ -14,7 +14,6 @@ class Model:
         if not smart_filename.endswith('.txt'):
             smart_filename += '.txt'
         smart_filename = os.path.join(MODEL_DIR, smart_filename)
-        print(filename, smart_filename)
         if os.path.isfile(smart_filename):
             self.load_from_file(smart_filename)
         else:
