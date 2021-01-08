@@ -23,7 +23,7 @@ def veff_to_aeff(energies, effective_volume):
         int_len[i] = avg_int # water equivalent interaction length
 
     ice_density = 0.92 # relative to water density
-    return effective_volume * ice_density / int_len
+    return np.asarray(effective_volume) * ice_density / int_len
 
 
 def flux_sensitivity(energies, effective_area, limit_factor=2.44):
@@ -35,9 +35,9 @@ def flux_sensitivity(energies, effective_area, limit_factor=2.44):
             raise ValueError("Energies should be evenly spaced in log-10-space")
     bins_per_decade = 1/d_log_energy[0]
 
-    factors = limit_factor * bins_per_decade / np.log(10) / energies
+    factors = limit_factor * bins_per_decade / np.log(10) / np.asarray(energies)
 
-    return factors / effective_area
+    return factors / np.asarray(effective_area)
 
 
 def neutrino_count(energies, sensitivities, model, model_band=False):
@@ -64,4 +64,4 @@ def neutrino_count(energies, sensitivities, model, model_band=False):
 
     # Transposes are used to make sure the operation works for the band values
     # as well as simple flux values
-    return (mean_fluxes.T / sensitivities).T
+    return (mean_fluxes.T / np.asarray(sensitivities)).T
