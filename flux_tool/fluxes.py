@@ -8,6 +8,22 @@ from . import units
 
 
 def veff_to_aeff(energies, effective_volume):
+    """
+    Convert effective volumes into effective areas.
+
+    Parameters
+    ----------
+    energies : array_like
+        Energies (GeV) at which effective volumes were calculated.
+    effective_volume : array_like
+        Effective volumes (m^3 sr) for the detector/station in question.
+
+    Returns
+    -------
+    effective_area : ndarray
+        Effective areas (m^2 sr) for the detector/station in question.
+
+    """
     # Get average interaction lengths
     # (harmonic mean, since average should be in cross section)
     int_len = np.zeros(len(energies))
@@ -27,6 +43,33 @@ def veff_to_aeff(energies, effective_volume):
 
 
 def flux_sensitivity(energies, effective_area, livetime=units.yr, limit_factor=2.44):
+    """
+    Convert effective areas into sensitivities.
+
+    Parameters
+    ----------
+    energies : array_like
+        Energies (GeV) at which effective volumes were calculated.
+    effective_area : array_like
+        Effective areas (m^2 sr) for the detector/station in question.
+    livetime : float, optional
+        Total observation time (s) of the detector/station in question.
+    limit_factor : float, optional
+        Additional factor to multiply resulting sensitivity. See notes.
+
+    Returns
+    -------
+    sensitivity : ndarray
+        Sensitivities (GeV^-1 s^-1 m^-2 sr^-1) for the detector/station.
+
+    Notes
+    -----
+    By default the limit factor is 2.44. This value is the factor which is used
+    for calculating a Feldman-Cousins upper limit with zero background events.
+    Other potentially useful values are 1 for a single-event-sensitivity
+    calculation, and 2.3 for a Neyman upper limit with zero background events.
+
+    """
     # Get number of energy bins per decade
     log_energy = np.log10(energies)
     d_log_energy = np.diff(log_energy)
@@ -42,7 +85,34 @@ def flux_sensitivity(energies, effective_area, livetime=units.yr, limit_factor=2
 
 
 def neutrino_count(model, energies, effective_area, livetime=units.yr, model_band=False):
-    """Count the number of neutrinos observed for a given model at each energy"""
+    """
+    Count the number of neutrinos observed for a given model at each energy.
+
+    Parameters
+    ----------
+    model : Model
+        A flux model object representing the desired source model.
+    energies : array_like
+        Energies (GeV) at which effective volumes were calculated.
+    effective_area : array_like
+        Effective areas (m^2 sr) for the detector/station in question.
+    livetime : float, optional
+        Total observation time (s) of the detector/station in question.
+    model_band : bool, optional
+        Whether to use the lower and upper bands of the model rather than
+        the central flux value when calculating neutrino counts.
+
+    Returns
+    -------
+    neutrino_counts : ndarray
+        The number of neutrinos expected from the given model at each energy.
+        If `model_band` was `False`, the shape of the output will match the
+        shape of `energies`. If `model_band` was `True`, the shape of the
+        output will be (N, 2), where N is the length of `energies`. The first
+        column contains neutrino counts for the lower band of the model and the
+        second column contains neutrino counts for the upper band.
+
+    """
     log_energy = np.log10(energies)
     step = np.diff(log_energy)[0]
 

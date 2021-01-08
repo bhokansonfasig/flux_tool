@@ -1,4 +1,4 @@
-"""Classes for neutrino flux models"""
+"""Class for neutrino flux models"""
 
 import numpy as np
 import os.path
@@ -9,6 +9,33 @@ MODEL_DIR = os.path.join(os.path.dirname(__file__), 'default_models')
 
 
 class Model:
+    """
+    Class for storing details of a flux model.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the model's data file. Can be a simple name for default models,
+        but must be the file path for any custom models.
+
+    Attributes
+    ----------
+    name : str
+        The name of the model, from the "NAME" field of the file.
+    description : str
+        A description of the model, from the "SOURCE" field of the file.
+    energies : ndarray
+        An array of energies at which the fluxes are given.
+    fluxes, band_min, band_max : ndarray
+        The flux data for the model. Typically either `fluxes` is non-zero or
+        the pair `band_min` and `band_max` are non-zero, though sometimes there
+        is data for all three.
+    metadata : dict
+        A dictionary containing other metadata about the model from the file.
+        This includes entries for the energy units, flux units, energy power,
+        the model's data type, and the energy binning.
+
+    """
     def __init__(self, filename):
         smart_filename = filename
         if not smart_filename.endswith('.txt'):
@@ -20,6 +47,15 @@ class Model:
             self.load_from_file(filename)
 
     def load_from_file(self, filename):
+        """
+        Read in data to the model from the given `filename`.
+
+        Paramters
+        ---------
+        filename : str
+            The file path of the model's data file.
+
+        """
         name = None
         source = None
         energy_col = None

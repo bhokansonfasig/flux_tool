@@ -53,7 +53,32 @@ def get_from_enum(value, enum):
 
 
 class NeutrinoInteraction:
-    """Docs"""
+    """
+    Class for storing and calculating neutrino interaction parameters.
+
+    Parameters
+    ----------
+    neutrino_type
+        Identification value of the neutrino type. Values should be from the
+        ``NeutrinoInteraction.NeutrinoType`` enum, but integer or string values
+        may work if carefully chosen.
+    interaction_type
+        Identification value of the neutrino's interaction type. Values should
+        be from the ``NeutrinoInteraction.InteractionType`` enum, but integer
+        or string values may work if carefully chosen.
+    energy : float
+        Energy (GeV) of the neutrino.
+
+    Attributes
+    ----------
+    neutrino : NeutrinoInteraction.NeutrinoType
+        Identification value of the neutrino type.
+    interaction : NeutrinoInteraction.InteractionType
+        Identification value of the neutrino's interaction type.
+    energy : float
+        Energy (GeV) of the neutrino.
+
+    """
     class NeutrinoType(Enum):
         """
         Enum containing possible neutrino types.
@@ -131,7 +156,7 @@ class NeutrinoInteraction:
     @property
     def interaction(self):
         """
-        Identification value of the interaction type.
+        Identification value of the neutrino's interaction type.
 
         Should always be a value from the ``InteractionType`` enum. Setting
         with integer or string values may work if carefully chosen.
