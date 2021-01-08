@@ -23,7 +23,7 @@ def veff_to_aeff(energies, effective_volume):
         int_len[i] = avg_int # water equivalent interaction length
 
     ice_density = 0.92 # relative to water density
-    return veffs * ice_density / int_len
+    return effective_volume * ice_density / int_len
 
 
 def flux_sensitivity(energies, effective_area, stations=1, livetime=1,
