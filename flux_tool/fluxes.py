@@ -40,7 +40,7 @@ def flux_sensitivity(energies, effective_area, limit_factor=2.44):
     return factors / np.asarray(effective_area)
 
 
-def neutrino_count(energies, sensitivities, model, model_band=False):
+def neutrino_count(energies, effective_area, model, model_band=False):
     """Count the number of neutrinos observed for a given model at each energy"""
     log_energy = np.log10(energies)
     step = np.diff(log_energy)[0]
@@ -62,6 +62,8 @@ def neutrino_count(energies, sensitivities, model, model_band=False):
         else:
             mean_fluxes[i] = np.trapz(flux(e_range), x=log_e_range) / step
 
+    sensitivities = flux_sensitivity(energies, effective_area, limit_factor=1)
+
     # Transposes are used to make sure the operation works for the band values
     # as well as simple flux values
-    return (mean_fluxes.T / np.asarray(sensitivities)).T
+    return (mean_fluxes.T / sensitivities).T

@@ -15,13 +15,12 @@ def plot_neutrinos_by_year_ara(models, energies, veff_yearly, styles=None,
 #     plt.grid(ls='--', c='dimgray', axis='y')
 
     aeff_yearly = flux_tool.veff_to_aeff(energies, veff_yearly)
-    sensitivity_yearly = flux_tool.flux_sensitivity(energies, aeff_yearly, limit_factor=1)
 
     detections = {}
     for name, model in models.items():
         detections[name] = [0]
         for i, year in enumerate(years[1:]):
-            nus = flux_tool.neutrino_count(energies, sensitivity_yearly[i], model[0], model_band=bool(model[1]))
+            nus = flux_tool.neutrino_count(energies, aeff_yearly[i], model[0], model_band=bool(model[1]))
             if model[1]:
                 nus = nus[:, model[1]-1]
             detections[name].append(np.sum(nus))
