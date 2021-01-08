@@ -26,7 +26,7 @@ def veff_to_aeff(energies, effective_volume):
     return np.asarray(effective_volume) * ice_density / int_len
 
 
-def flux_sensitivity(energies, effective_area, limit_factor=2.44):
+def flux_sensitivity(energies, effective_area, livetime=units.yr, limit_factor=2.44):
     # Get number of energy bins per decade
     log_energy = np.log10(energies)
     d_log_energy = np.diff(log_energy)
@@ -35,12 +35,13 @@ def flux_sensitivity(energies, effective_area, limit_factor=2.44):
             raise ValueError("Energies should be evenly spaced in log-10-space")
     bins_per_decade = 1/d_log_energy[0]
 
-    factors = limit_factor * bins_per_decade / np.log(10) / np.asarray(energies)
+    factors = (limit_factor / livetime *
+               bins_per_decade / np.log(10) / np.asarray(energies))
 
     return factors / np.asarray(effective_area)
 
 
-def neutrino_count(energies, effective_area, model, model_band=False):
+def neutrino_count(model, energies, effective_area, livetime=units.yr, model_band=False):
     """Count the number of neutrinos observed for a given model at each energy"""
     log_energy = np.log10(energies)
     step = np.diff(log_energy)[0]
@@ -62,7 +63,8 @@ def neutrino_count(energies, effective_area, model, model_band=False):
         else:
             mean_fluxes[i] = np.trapz(flux(e_range), x=log_e_range) / step
 
-    sensitivities = flux_sensitivity(energies, effective_area, limit_factor=1)
+    sensitivities = flux_sensitivity(energies, effective_area,
+                                     livetime=livetime, limit_factor=1)
 
     # Transposes are used to make sure the operation works for the band values
     # as well as simple flux values
