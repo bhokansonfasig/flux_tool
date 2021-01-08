@@ -36,7 +36,8 @@ def flux_sensitivity(energies, effective_area, stations=1, livetime=1,
             raise ValueError("Energies should be evenly spaced in log-10-space")
     bins_per_decade = 1/d_log_energy[0]
 
-    factors = limit_factor / livetime * bins_per_decade / np.log(10) / energies
+    factors = (limit_factor / livetime * stations *
+               bins_per_decade / np.log(10) / energies)
 
     return factors / effective_area
 
