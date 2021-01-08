@@ -400,7 +400,8 @@ class LimitFigure:
         aeffs = flux_tool.veff_to_aeff(energies, veffs)
         print(f"Aeffs: {aeffs}")
         print(f"Total Aeffs: {aeffs*stations*years}")
-        limits = flux_tool.flux_sensitivity(energies, aeffs*stations*years*flux_tool.units.yr)
+        limits = flux_tool.flux_sensitivity(energies, aeffs*stations,
+                                            livetime=years*flux_tool.units.yr)
         print(f"Limits: {limits}")
         limits *= energies**self.e_power # adjust for energy scaling of plot
         print(f"Scaled Limits: {limits}")

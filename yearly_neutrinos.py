@@ -20,7 +20,9 @@ def plot_neutrinos_by_year_ara(models, energies, veff_yearly, styles=None,
     for name, model in models.items():
         detections[name] = [0]
         for i, year in enumerate(years[1:]):
-            nus = flux_tool.neutrino_count(energies, aeff_yearly[i], model[0], model_band=bool(model[1]))
+            nus = flux_tool.neutrino_count(model[0], energies, aeff_yearly[i],
+                                           livetime=flux_tool.units.yr,
+                                           model_band=bool(model[1]))
             if model[1]:
                 nus = nus[:, model[1]-1]
             detections[name].append(np.sum(nus))
@@ -100,7 +102,7 @@ if __name__=="__main__":
     ara_by_year = np.array([284*ara_100m/366, (217+233)*ara_200m/365, (124*ara_100m+(313+304)*ara_200m)/365,
                            (345+250)*ara_200m/365, (127*ara_100m+(323+297)*ara_200m)/366, 137*ara_200m/365,
                            (316*ara_100m+(303+316+313)*ara_200m+186*ara_200mpa)/365,
-                           ara_100m+3*ara_200m+ara_200mpa, ara_100m+3*ara_200m+ara_200mpa, ara_100m+3*ara_200m+ara_200mpa]) * flux_tool.units.yr
+                           ara_100m+3*ara_200m+ara_200mpa, ara_100m+3*ara_200m+ara_200mpa, ara_100m+3*ara_200m+ara_200mpa])
 
     # Treat the i3_nu_fit function as a model object
     FauxModel = namedtuple('FauxModel', ['energies', 'fluxes'])
